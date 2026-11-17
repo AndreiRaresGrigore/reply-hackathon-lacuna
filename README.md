@@ -1,6 +1,6 @@
-# Reply Hackathon · Lacuna + Squadra
+# Reply Hackathon · Lacuna + Squadra: AI-Assisted Learning-Gap Diagnosis
 
-### AI-assisted learning-gap diagnosis for math teachers
+### An AI agent that helps math teachers find the missing concept behind every wrong answer
 
 **Every wrong answer points to the missing concept.** Lacuna + Squadra is an EdTech product concept built for the **Reply hackathon** at BESTech 26. A short diagnostic test shows *why* each student got a math problem wrong, groups the class by the concept they are missing, and prepares targeted exercises from the teacher's own textbook. The teacher approves every step.
 
