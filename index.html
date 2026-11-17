@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lacuna™ + Squadra™ · find the missing concept</title>
+<meta name="description" content="Upload the chapter you are teaching. Squadra™ runs a short diagnostic test and Lacuna™ prepares the right exercises for each group. You approve every step.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --q: 24px;                 /* un quadretto */
+    --paper: #FBFCFE;
+    --sheet: #FFFFFF;
+    --grid: #DFE8F5;
+    --ink: #14213D;
+    --ink-soft: #46557A;
+    --blue: #1F4FD8;
+    --blue-wash: #E9EFFD;
+    --red: #C21F35;
+    --red-wash: #FCE9EC;
+    --yellow: #FFE066;
+    --green: #0F7A50;
+    --green-wash: #E3F5EC;
+    --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+    --body: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, sans-serif;
+    --hand: "Caveat", "Segoe Print", cursive;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--body);
+    font-size: 1.125rem;
+    line-height: 1.55;
+    color: var(--ink);
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: var(--q) var(--q);
+    -webkit-font-smoothing: antialiased;
+  }
+  img, svg { display: block; max-width: 100%; }
+  a { color: var(--blue); text-underline-offset: 3px; }
+  :focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 4px; }
+
+  .wrap { width: min(1128px, 100% - 2 * var(--q)); margin-inline: auto; }
+
+  h1, h2, h3 { font-family: var(--display); line-height: 1.04; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+  h1 { font-size: clamp(2.5rem, 5.6vw, 4.5rem); font-weight: 800; }
+  h2 { font-size: clamp(1.9rem, 3.6vw, 2.9rem); font-weight: 800; }
+  h3 { font-size: 1.45rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.15; }
+  p { margin: 0; max-width: 62ch; text-wrap: pretty; }
+  .lead { font-size: 1.25rem; color: var(--ink-soft); }
+  .soft { color: var(--ink-soft); }
+  .hand { font-family: var(--hand); font-size: 1.6rem; line-height: 1.15; }
+  mark { background: linear-gradient(transparent 55%, var(--yellow) 55%); color: inherit; padding: 0 2px; }
+
+  /* ---------- barra in alto ---------- */
+  .top { padding-block: var(--q); }
+  .top .wrap { display: flex; align-items: center; gap: var(--q); }
+  .brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 800; font-size: 1.5rem; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+  .top nav { margin-left: auto; display: flex; gap: var(--q); align-items: center; }
+  .top nav a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: 1rem; padding: 6px 2px; }
+  .top nav a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 48px; padding: 0 22px;
+    font: 700 1.05rem var(--body); text-decoration: none; cursor: pointer;
+    color: #fff; background: var(--ink); border: 2px solid var(--ink); border-radius: 6px;
+  }
+  .btn:hover { background: var(--blue); border-color: var(--blue); }
+  .btn.quiet { background: var(--sheet); color: var(--ink); }
+  .btn.quiet:hover { background: var(--blue-wash); border-color: var(--ink); }
+  .top nav a.btn { color: #fff; min-height: 40px; padding: 0 16px; }
+  .top nav a.btn:hover { text-decoration: none; }
+
+  /* ---------- hero ---------- */
+  .hero { padding-block: calc(var(--q) * 2) calc(var(--q) * 4); }
+  .hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: calc(var(--q) * 3); align-items: start; }
+  .hero-copy { padding-top: calc(var(--q) * 2); }
+  .hero-copy .lead { margin-top: var(--q); }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: calc(var(--q) * 1.5); }
+  .hero-note { margin-top: var(--q); font-size: 1rem; color: var(--ink-soft); }
+
+  .sheet {
+    background: var(--sheet);
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+  .question { padding: var(--q); }
+  /* cornice tablet attorno alla domanda */
+  .tablet { position: relative; padding: 20px; background: var(--ink); border-radius: 36px; box-shadow: inset 0 0 0 3px #2B3A5E, 10px 12px 0 rgba(20, 33, 61, 0.16); }
+  .tablet::before { content: ""; position: absolute; top: 7px; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: #4A5B85; }
+  .tablet .question { border: 0; box-shadow: none; border-radius: 18px; }
+  .q-head { display: flex; justify-content: space-between; gap: 12px; font-size: 0.95rem; color: var(--ink-soft); }
+  .q-text { font-size: 1.2rem; font-weight: 600; margin-top: 8px; max-width: none; }
+  .q-body { display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: var(--q); align-items: center; margin-top: 12px; }
+  .figure {
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 20px 20px;
+    border: 1px solid var(--grid); border-radius: 4px;
+  }
+  .figure svg { width: 100%; height: auto; }
+  .fig-line { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+  .fig-thin { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+  .fig-blue { fill: none; stroke: var(--blue); stroke-width: 2.5; stroke-linecap: round; }
+  .fig-label { font: italic 400 20px var(--body); fill: var(--ink); }
+  .fig-val { font: 700 20px var(--body); fill: var(--blue); }
+  .fig-ask { font: 700 26px var(--hand); fill: var(--ink); }
+  .fig-ask.wrong { fill: var(--red); }
+  .fig-ask.right { fill: var(--green); }
+
+  .options { display: grid; gap: 10px; }
+  .opt {
+    display: flex; align-items: center; gap: 10px;
+    min-height: 48px; padding: 0 14px;
+    font: 700 1.15rem var(--body); color: var(--ink); text-align: left;
+    background: var(--sheet); border: 2px solid var(--ink); border-radius: 6px; cursor: pointer;
+  }
+  .opt span { font-weight: 400; color: var(--ink-soft); }
+  .opt:hover { background: var(--blue-wash); }
+  .opt[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .opt[aria-pressed="true"] span { color: #C9D4EE; }
+
+  .reading { margin-top: var(--q); padding-top: 18px; border-top: 2px dashed var(--ink); display: grid; gap: 10px; }
+  .reading .work { color: var(--blue); font-size: 1.7rem; }
+  .verdict { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .tag { display: inline-block; font-weight: 700; font-size: 0.95rem; padding: 2px 10px; border-radius: 999px; white-space: nowrap; }
+  .tag.gap { background: var(--red-wash); color: var(--red); }
+  .tag.ok { background: var(--green-wash); color: var(--green); }
+  .tag.wait { background: var(--blue-wash); color: var(--blue); }
+  .reading strong { font-size: 1.15rem; }
+  .reading p { font-size: 1.02rem; color: var(--ink-soft); }
+  .try { font-size: 0.95rem; color: var(--ink-soft); margin-top: 14px; }
+
+  /* disegno iniziale del triangolo: l'unico movimento non richiesto */
+  @media (prefers-reduced-motion: no-preference) {
+    .draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.3s 0.2s ease-out forwards; }
+    .after-draw { opacity: 0; animation: appear 0.4s 1.4s ease-out forwards; }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes appear { to { opacity: 1; } }
+  }
+
+  /* ---------- sezioni ---------- */
+  section { padding-block: calc(var(--q) * 4); }
+  .band { background: var(--sheet); border-block: 2px solid var(--ink); }
+  .section-head { display: grid; gap: var(--q); margin-bottom: calc(var(--q) * 2.5); }
+
+  .contrast { display: grid; grid-template-columns: 1fr 1fr; gap: calc(var(--q) * 2); }
+  .contrast h3 { margin-bottom: 12px; }
+  .contrast .without { color: var(--ink-soft); }
+  .contrast .without h3 { color: var(--ink-soft); text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 3px; }
+
+  /* ---------- esempio in tre passi ---------- */
+  .step { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: calc(var(--q) * 3); align-items: start; padding-block: calc(var(--q) * 2.5); border-top: 2px solid var(--ink); }
+  .step:last-of-type { padding-bottom: 0; }
+  .step-n { font-family: var(--display); font-weight: 800; font-size: 1.1rem; color: var(--blue); margin-bottom: 10px; }
+  .step-copy { display: grid; gap: 14px; }
+  .step-copy h3 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.02em; }
+  .who { display: flex; gap: 10px; align-items: baseline; font-size: 1rem; margin-top: 6px; }
+  .who b { white-space: nowrap; }
+
+  /* mappa dei prerequisiti */
+  .map { padding: var(--q); }
+  .map-target { display: flex; gap: 14px; align-items: center; padding-bottom: 16px; }
+  .map-target strong { font-size: 1.2rem; line-height: 1.25; }
+  .map ul { list-style: none; margin: 0 0 0 23px; padding: 0; border-left: 2px solid var(--ink); }
+  .map li { position: relative; display: flex; gap: 14px; align-items: center; padding: 10px 0 10px 28px; }
+  .map li::before { content: ""; position: absolute; left: 0; top: 50%; width: 20px; border-top: 2px solid var(--ink); }
+  .map li:last-child { border-left: 2px solid var(--sheet); margin-left: -2px; }
+  .map li:last-child::after { content: ""; position: absolute; left: -2px; top: 0; height: 50%; border-left: 2px solid var(--ink); }
+  .glyph { flex: none; width: 48px; height: 48px; background: var(--blue-wash); border-radius: 50%; }
+  .glyph.target { background: var(--yellow); }
+  .map li div { display: grid; }
+  .map li small { font-size: 0.95rem; color: var(--ink-soft); }
+  .gate { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 18px; padding-top: 18px; border-top: 2px dashed var(--ink); }
+  .gate .btn { min-height: 44px; }
+  .gate p { font-size: 0.98rem; color: var(--ink-soft); flex: 1 1 200px; }
+
+  /* verifica rivista dalla docente */
+  .review { padding: var(--q); }
+  .review-body { display: grid; gap: 18px; margin-top: 12px; }
+  .review-body .figure { max-width: 380px; }
+  .keys { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .keys li { display: grid; grid-template-columns: 62px 1fr; gap: 10px; align-items: baseline; padding-bottom: 8px; border-bottom: 1px solid var(--grid); font-size: 1rem; line-height: 1.35; }
+  .keys li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .keys b { font-size: 1.1rem; }
+  .keys .is-right { color: var(--green); font-weight: 700; }
+  .keys em { font-style: normal; color: var(--red); font-weight: 700; }
+
+  /* gruppi */
+  .groups { display: grid; gap: 0; }
+  .group { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: var(--q); padding: 18px var(--q); border-bottom: 2px solid var(--ink); }
+  .group:last-child { border-bottom: 0; }
+  .group h4 { margin: 0; font: 800 1.15rem/1.2 var(--display); }
+  .dots { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+  .dots i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--ink); background: var(--red); }
+  .dots i.closed { background: var(--green); }
+  .dots i.none { background: var(--blue); }
+  .group .count { font-size: 0.95rem; color: var(--ink-soft); margin-top: 8px; }
+  .exercise { display: grid; gap: 6px; }
+  .exercise p { font-size: 1.02rem; }
+  .exercise .hand { color: var(--blue); font-size: 1.45rem; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 14px var(--q); border-top: 2px dashed var(--ink); font-size: 0.95rem; color: var(--ink-soft); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--ink); }
+
+  /* ---------- limiti ---------- */
+  .limits { display: grid; grid-template-columns: 1fr 1fr; gap: calc(var(--q) * 2); }
+  .talk { display: grid; gap: 14px; align-content: start; }
+  .talk h3 { margin-bottom: 4px; }
+  .say { padding: 14px 18px; border: 2px solid var(--ink); border-radius: 4px; background: var(--sheet); font-size: 1.02rem; max-width: 46ch; }
+  .say b { display: block; font-size: 0.9rem; color: var(--ink-soft); margin-bottom: 2px; }
+  .say.them { font-family: var(--hand); font-size: 1.5rem; line-height: 1.2; background: var(--paper); }
+  .say.them b { font-family: var(--body); }
+  .say.us { margin-left: var(--q); border-left: 8px solid var(--blue); }
+  .rules { list-style: none; margin: calc(var(--q) * 2) 0 0; padding: calc(var(--q) * 1.5) 0 0; border-top: 2px solid var(--ink); display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(var(--q) * 1.5); }
+  .rules li { font-size: 1.02rem; color: var(--ink-soft); }
+  .rules b { display: block; color: var(--ink); font-size: 1.1rem; margin-bottom: 4px; }
+
+  /* ---------- chiusura ---------- */
+  .close .wrap { display: grid; gap: var(--q); justify-items: start; }
+  footer { padding-block: calc(var(--q) * 1.5); border-top: 2px solid var(--ink); background: var(--sheet); font-size: 0.95rem; color: var(--ink-soft); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 8px var(--q); justify-content: space-between; }
+
+  /* ---------- schermi stretti ---------- */
+  @media (max-width: 900px) {
+    .hero .wrap, .step, .contrast, .limits { grid-template-columns: 1fr; gap: calc(var(--q) * 1.5); }
+    .hero-copy { padding-top: 0; }
+    .rules { grid-template-columns: 1fr; gap: var(--q); }
+    section { padding-block: calc(var(--q) * 3); }
+    .top nav a:not(.btn) { display: none; }
+  }
+  @media (max-width: 560px) {
+    .brand { font-size: 1.15rem; gap: 8px; white-space: nowrap; }
+    .brand svg { width: 28px; height: 28px; }
+    .top nav a.btn { white-space: nowrap; padding: 0 12px; }
+    body { font-size: 1.0625rem; }
+    .q-body { grid-template-columns: 1fr; }
+    .options { grid-template-columns: 1fr 1fr; }
+    .group { grid-template-columns: 1fr; gap: 12px; }
+    .sheet { box-shadow: 5px 5px 0 var(--ink); }
+    .question, .map, .review { padding: 18px; }
+    .tablet { padding: 12px; border-radius: 26px; }
+    .tablet::before { top: 3px; width: 5px; height: 5px; }
+    .tablet .question { border-radius: 15px; }
+    .say.us { margin-left: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#" aria-label="Lacuna and Squadra, top of page">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+        <path d="M4 30V4l26 26z" fill="#FFE066" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M10.5 23.5v-8l8 8z" fill="#FBFCFE" stroke="#14213D" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      Lacuna™ + Squadra™
+    </a>
+    <nav aria-label="Sections">
+      <a href="#example">The example</a>
+      <a href="#limits">What it won't do</a>
+      <a class="btn" href="lacuna.html">Open the demo</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ HERO: the diagnostic question, to try ============ -->
+<section class="hero" id="try">
+  <div class="wrap">
+    <div class="hero-copy">
+      <h1>Every wrong answer points to the missing concept.</h1>
+      <p class="lead">Upload the chapter you are teaching. Your class takes a short Squadra™ test that shows where each student got lost, and Lacuna™ prepares the right exercises for each group. You approve every step.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#example">See the full example</a>
+        <a class="btn quiet" href="#limits">What it won't do</a>
+      </div>
+      <p class="hero-note">Next to this is a real question from the test. Pick an answer the way a student would, and see what the teacher reads.</p>
+    </div>
+
+    <div class="tablet">
+    <div class="sheet question">
+      <div class="q-head"><span>Squadra™ diagnostic test, question 3 of 5</span><span>Triangles</span></div>
+      <p class="q-text" id="q-text">Triangle ABC is isosceles with base BC. The apex angle A measures 40°. What is angle B?</p>
+
+      <div class="q-body">
+        <div class="figure">
+          <svg viewBox="0 0 440 380" role="img" aria-label="Isosceles triangle ABC with apex A at the top. Angle A measures 40 degrees; angle B is unknown.">
+            <path class="fig-line draw" pathLength="1" d="M220 50 L118 330 L322 330 Z"/>
+            <g class="after-draw">
+              <path class="fig-thin" d="M162.4 187.6 L175.6 192.4 M264.4 192.4 L277.6 187.6"/>
+              <path class="fig-blue" d="M204.3 93.2 A46 46 0 0 0 235.7 93.2"/>
+              <text class="fig-val" x="220" y="124" text-anchor="middle">40°</text>
+              <path class="fig-blue" d="M158 330 A40 40 0 0 0 131.7 292.4"/>
+              <text class="fig-ask" id="fig-b" x="168" y="308" text-anchor="middle">?</text>
+              <text class="fig-ask right" id="fig-c" x="272" y="308" text-anchor="middle"></text>
+              <text class="fig-label" x="220" y="36" text-anchor="middle">A</text>
+              <text class="fig-label" x="98" y="350" text-anchor="middle">B</text>
+              <text class="fig-label" x="342" y="350" text-anchor="middle">C</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="options" role="group" aria-labelledby="q-text">
+          <button class="opt" type="button" data-k="a" aria-pressed="false"><span>A</span>140°</button>
+          <button class="opt" type="button" data-k="b" aria-pressed="false"><span>B</span>70°</button>
+          <button class="opt" type="button" data-k="c" aria-pressed="false"><span>C</span>160°</button>
+          <button class="opt" type="button" data-k="d" aria-pressed="false"><span>D</span>40°</button>
+        </div>
+      </div>
+
+      <div class="reading" aria-live="polite">
+        <p class="hand work" id="r-work"></p>
+        <div class="verdict"><span class="tag" id="r-tag"></span><strong id="r-title"></strong></div>
+        <p id="r-text"></p>
+      </div>
+      <p class="try">Try the other answers: each one tells a different story.</p>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ why ============ -->
+<section class="band">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Half the class doesn't get lost on the new chapter, but on an old prerequisite.</h2>
+      <p class="lead">A normal test tells you who got it wrong. To find out why, you have to reread every paper, mistake by mistake. That is the work Lacuna™ takes off your hands.</p>
+    </div>
+    <div class="contrast">
+      <div class="without">
+        <h3>The same exercises for everyone</h3>
+        <p>Paste a chapter into a chatbot and you get generic exercises. The student who confused 180° with 360° and the one who just slipped on a subtraction get the same worksheet.</p>
+      </div>
+      <div>
+        <h3>Exercises on the real gap</h3>
+        <p>Every wrong answer in the test is built on one specific mistake. The results form a few groups, and each group works on the point it is missing, with <mark>the words and method of your own textbook</mark>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ example ============ -->
+<section id="example">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>An example: Class 1B and the chapter on triangles.</h2>
+      <p class="lead">Ms Rinaldi teaches maths to a first-year middle school class. This week she is teaching the interior angles of a triangle. Here is what happens from one Monday to the next.</p>
+    </div>
+
+    <!-- step 1 -->
+    <article class="step">
+      <div class="step-copy">
+        <div>
+          <p class="step-n">Step 1</p>
+          <h3>The chapter becomes a map</h3>
+        </div>
+        <p>The teacher uploads the chapter PDF to Lacuna™. It breaks the chapter down into the concept to learn and what students need to know first, using the textbook's own headings and definitions.</p>
+        <p class="soft">She removes, adds or corrects items. Until she approves the map, no test is generated.</p>
+      </div>
+
+      <div class="sheet map">
+        <div class="map-target">
+          <svg class="glyph target" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 11 L11 35 H37 Z" fill="none" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/></svg>
+          <div><small class="soft">Chapter concept</small><br><strong>The interior angles of a triangle add up to 180°</strong></div>
+        </div>
+        <ul aria-label="Prerequisites">
+          <li>
+            <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M9 31 H39 M24 31 L32 15" fill="none" stroke="#14213D" stroke-width="2.5" stroke-linecap="round"/><path d="M31 31 A7 7 0 0 0 27.1 24.7" fill="none" stroke="#1F4FD8" stroke-width="2.5"/></svg>
+            <div><b>Straight and supplementary angles</b><small>Needed to see where the 180° comes from</small></div>
+          </li>
+          <li>
+            <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M9 18 H39 M9 31 H39 M17 39 L31 9" fill="none" stroke="#14213D" stroke-width="2.5" stroke-linecap="round"/></svg>
+            <div><b>Parallel lines cut by a transversal</b><small>Alternate and co-interior angles, used in the proof</small></div>
+          </li>
+          <li>
+            <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 10 L14 36 H34 Z" fill="none" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/><path d="M16.5 22 L21 23.7 M27 23.7 L31.5 22" stroke="#1F4FD8" stroke-width="2.5" stroke-linecap="round"/></svg>
+            <div><b>Classifying triangles</b><small>Equal sides and angles in isosceles and equilateral triangles</small></div>
+          </li>
+          <li>
+            <svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M10 32 A14 14 0 0 1 38 32 Z" fill="none" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/><path d="M24 32 V22 M24 32 L31.5 25" stroke="#1F4FD8" stroke-width="2.5" stroke-linecap="round"/></svg>
+            <div><b>Arithmetic with angle measures</b><small>Subtracting degrees without borrowing mistakes</small></div>
+          </li>
+        </ul>
+        <div class="gate">
+          <button class="btn" type="button" id="approve" aria-pressed="false">Approve the map</button>
+          <span class="tag wait" id="approve-tag">Draft</span>
+          <p id="approve-note">Waiting for the teacher. The test can't be generated yet.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- step 2 -->
+    <article class="step">
+      <div class="step-copy">
+        <div>
+          <p class="step-n">Step 2</p>
+          <h3>A test that diagnoses</h3>
+        </div>
+        <p>Five questions, ten minutes, taken in class with Squadra™. Each wrong answer is there because a specific mistake leads to it, tied to a point on the map.</p>
+        <p class="soft">For every answer, the teacher sees which gap it reveals. She changes anything she isn't happy with, then assigns the test to the class.</p>
+      </div>
+
+      <div class="sheet review">
+        <div class="q-head"><span>Question 2 of 5, teacher view</span><span class="tag ok">Approved</span></div>
+        <p class="q-text">Lines r and s are parallel. What is the angle marked with a question mark?</p>
+        <div class="review-body">
+          <div class="figure">
+            <svg viewBox="0 0 420 300" role="img" aria-label="Two parallel lines r and s cut by transversal t. One interior angle measures 112 degrees; the co-interior angle is unknown.">
+              <path class="fig-line" d="M40 90 H370 M40 210 H370"/>
+              <path class="fig-line" d="M264.2 30 L167.3 270"/>
+              <path class="fig-blue" d="M274 90 A34 34 0 0 1 227.3 121.5"/>
+              <text class="fig-val" x="262" y="140">112°</text>
+              <path class="fig-blue" d="M225.5 210 A34 34 0 0 0 204.2 178.5"/>
+              <text class="fig-ask" x="240" y="192" text-anchor="middle">?</text>
+              <text class="fig-label" x="384" y="96">r</text>
+              <text class="fig-label" x="384" y="216">s</text>
+              <text class="fig-label" x="274" y="44">t</text>
+            </svg>
+          </div>
+          <ul class="keys">
+            <li><b>A 112°</b><span><em>Co-interior angles.</em> Treats them like alternate angles: equal instead of supplementary.</span></li>
+            <li><b>B 68°</b><span class="is-right">Correct answer</span></li>
+            <li><b>C 248°</b><span><em>Straight angle and full turn.</em> Subtracts from 360° instead of 180°.</span></li>
+            <li><b>D 78°</b><span><em>Arithmetic with degrees.</em> Sets up 180° − 112° but borrows wrongly.</span></li>
+          </ul>
+        </div>
+      </div>
+    </article>
+
+    <!-- step 3 -->
+    <article class="step">
+      <div class="step-copy">
+        <div>
+          <p class="step-n">Step 3</p>
+          <h3>Targeted exercises, then a follow-up</h3>
+        </div>
+        <p>The 22 students' answers form three groups in Lacuna™. Each one gets exercises from the same chapter, focused on its weak point. Students with no gaps get harder problems.</p>
+        <p class="soft">The following Monday, two questions check whether the gap has closed. The teacher is left with three names to follow in person, instead of twenty-two papers to analyse.</p>
+      </div>
+
+      <div class="sheet groups">
+        <div class="group">
+          <div>
+            <h4>Angle sum of a triangle</h4>
+            <div class="dots" role="img" aria-label="7 students: 6 closed the gap, 1 did not">
+              <i class="closed"></i><i class="closed"></i><i class="closed"></i><i class="closed"></i><i class="closed"></i><i class="closed"></i><i></i>
+            </div>
+            <p class="count">7 students, 6 gaps closed</p>
+          </div>
+          <div class="exercise">
+            <p>Two angles of a triangle measure 55° and 65°. Cut the three angles out of a paper triangle and place them side by side: what angle do they make? Then work out the third angle.</p>
+            <p class="hand">55° + 65° + ? = 180°</p>
+          </div>
+        </div>
+        <div class="group">
+          <div>
+            <h4>Base angles of an isosceles triangle</h4>
+            <div class="dots" role="img" aria-label="6 students: 4 closed the gap, 2 did not">
+              <i class="closed"></i><i class="closed"></i><i class="closed"></i><i class="closed"></i><i></i><i></i>
+            </div>
+            <p class="count">6 students, 4 gaps closed</p>
+          </div>
+          <div class="exercise">
+            <p>In isosceles triangle ABC, colour the two equal angles the same way. The apex angle is 50°: how much is left for the two base angles together? And for each one?</p>
+            <p class="hand">180° − 50° = 130°, then 130° ÷ 2</p>
+          </div>
+        </div>
+        <div class="group">
+          <div>
+            <h4>No gaps</h4>
+            <div class="dots" role="img" aria-label="9 students with no gaps">
+              <i class="none"></i><i class="none"></i><i class="none"></i><i class="none"></i><i class="none"></i><i class="none"></i><i class="none"></i><i class="none"></i><i class="none"></i>
+            </div>
+            <p class="count">9 students, challenge problems</p>
+          </div>
+          <div class="exercise">
+            <p>An isosceles triangle has an exterior angle of 110° at the base. What is the apex angle? Justify each step with a property from the chapter.</p>
+          </div>
+        </div>
+        <div class="legend">
+          <span><i style="background:var(--green)"></i>gap closed at follow-up</span>
+          <span><i style="background:var(--red)"></i>still open</span>
+          <span><i style="background:var(--blue)"></i>no gap</span>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ limits ============ -->
+<section class="band" id="limits">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>What it won't do, even if you ask.</h2>
+      <p class="lead">These limits are checks written into the software. They don't depend on how a request is worded.</p>
+    </div>
+
+    <div class="limits">
+      <div class="talk">
+        <h3>No answers handed to students</h3>
+        <p class="say them"><b>Marco, Class 1B</b>I don't get any of it, just give me the answers to exercises 1, 2 and 3 so I can copy them.</p>
+        <p class="say us"><b>Squadra™</b>I can't give you the answers: this worksheet is for practising the angle sum. Let's look at just the first step of exercise 1. You have two angles, 55° and 65°: what do they make together?</p>
+      </div>
+      <div class="talk">
+        <h3>No grades and no diagnoses</h3>
+        <p class="say them"><b>Teacher</b>Turn these results into marks out of 10 for the register, and tell me who has dyscalculia.</p>
+        <p class="say us"><b>Lacuna™</b>I can't do either. I only show which concepts from the chapter each student is missing. Grades and any judgement about the person stay with you. The summary lists the mistakes by prerequisite.</p>
+      </div>
+    </div>
+
+    <ul class="rules">
+      <li><b>Stays inside the textbook</b>Discards any exercise that uses formulas or methods not found in the uploaded chapter.</li>
+      <li><b>Nothing goes out without you</b>The map, the test and the exercises reach the class only after you approve them.</li>
+      <li><b>Minimal data</b>For each student it keeps a code and their open or closed gaps. Nothing else.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ closing ============ -->
+<section class="close">
+  <div class="wrap">
+    <h2>Start with the chapter you are teaching this week.</h2>
+    <p class="lead">Upload the PDF, check the map, and within minutes you have a test ready to review.</p>
+    <a class="btn" href="lacuna.html">Open the teacher demo</a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Lacuna™ and Squadra™ are a demonstration prototype.</span>
+    <span>The class and results in the example are made up.</span>
+  </div>
+</footer>
+
+<script>
+  // Diagnostic reading of each answer to the isosceles triangle question.
+  const READINGS = {
+    a: { value: "140°", ok: false, work: "180° − 40° = 140°",
+         title: "Base angles of an isosceles triangle",
+         text: "Found what the two base angles add up to, but didn't split it: doesn't use the fact that B and C are equal." },
+    b: { value: "70°", ok: true, work: "180° − 40° = 140°   140° ÷ 2 = 70°",
+         title: "No gap on this question",
+         text: "Uses the angle sum of a triangle and knows the two base angles are equal." },
+    c: { value: "160°", ok: false, work: "360° − 40° = 320°   320° ÷ 2 = 160°",
+         title: "Angle sum of a triangle",
+         text: "The method is right, the starting point isn't: uses 360°, the angle sum of a quadrilateral." },
+    d: { value: "40°", ok: false, work: "B = A = 40°",
+         title: "Apex and base in an isosceles triangle",
+         text: "Knows two angles are equal, but pairs the apex angle with a base angle instead of the two base angles." }
+  };
+
+  const opts = document.querySelectorAll(".opt");
+  const $ = (id) => document.getElementById(id);
+
+  function choose(key) {
+    const r = READINGS[key];
+    opts.forEach((o) => o.setAttribute("aria-pressed", String(o.dataset.k === key)));
+    $("fig-b").textContent = r.value;
+    $("fig-b").setAttribute("class", "fig-ask " + (r.ok ? "right" : "wrong"));
+    $("fig-c").textContent = r.ok ? r.value : "";
+    $("r-work").textContent = r.work;
+    $("r-tag").textContent = r.ok ? "Correct" : "Gap";
+    $("r-tag").className = "tag " + (r.ok ? "ok" : "gap");
+    $("r-title").textContent = r.title;
+    $("r-text").textContent = r.text;
+  }
+  opts.forEach((o) => o.addEventListener("click", () => choose(o.dataset.k)));
+  choose("a");
+
+  // The teacher approves the map.
+  const approve = $("approve");
+  approve.addEventListener("click", () => {
+    const on = approve.getAttribute("aria-pressed") !== "true";
+    approve.setAttribute("aria-pressed", String(on));
+    approve.textContent = on ? "Back to draft" : "Approve the map";
+    approve.classList.toggle("quiet", on);
+    $("approve-tag").textContent = on ? "Approved" : "Draft";
+    $("approve-tag").className = "tag " + (on ? "ok" : "wait");
+    $("approve-note").textContent = on
+      ? "Map approved. Lacuna™ can now prepare the test."
+      : "Waiting for the teacher. The test can't be generated yet.";
+  });
+</script>
+</body>
+</html>

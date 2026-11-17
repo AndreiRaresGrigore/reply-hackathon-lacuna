@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lacuna™ · teacher demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --q: 24px;
+    --paper: #FBFCFE; --sheet: #FFFFFF; --grid: #DFE8F5;
+    --ink: #14213D; --ink-soft: #46557A;
+    --blue: #1F4FD8; --blue-wash: #E9EFFD;
+    --red: #C21F35; --red-wash: #FCE9EC;
+    --green: #0F7A50; --green-wash: #E3F5EC;
+    --orange: #A14B06; --orange-wash: #FDF0DC;
+    --purple: #6335B8; --purple-wash: #EFE8FB;
+    --teal: #0A6B7D; --teal-wash: #E0F3F6;
+    --grey-wash: #EEF1F6;
+    --yellow: #FFE066;
+    --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+    --body: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, sans-serif;
+    --hand: "Caveat", "Segoe Print", cursive;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh;
+    font: 1.0625rem/1.5 var(--body); color: var(--ink);
+    background-color: var(--paper);
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: var(--q) var(--q);
+    -webkit-font-smoothing: antialiased;
+  }
+  svg { display: block; max-width: 100%; }
+  a { color: var(--blue); text-underline-offset: 3px; }
+  :focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
+  h1, h2, h3, h4 { font-family: var(--display); margin: 0; letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+  h1 { font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 800; }
+  h2 { font-size: 1.35rem; font-weight: 800; }
+  h3 { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.01em; }
+  p { margin: 0; max-width: 64ch; text-wrap: pretty; }
+  .soft { color: var(--ink-soft); }
+  .small { font-size: 0.95rem; }
+  .hand { font-family: var(--hand); font-size: 1.45rem; line-height: 1.15; color: var(--blue); }
+
+  /* ---------- barra ---------- */
+  .bar { background: var(--sheet); border-bottom: 2px solid var(--ink); }
+  .bar-in { display: flex; align-items: center; gap: 16px; padding: 12px var(--q); max-width: 1440px; margin: 0 auto; }
+  .brand { display: inline-flex; align-items: center; gap: 8px; font: 800 1.3rem var(--display); color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+  .demo-flag { font-size: 0.92rem; font-weight: 700; padding: 3px 12px; border-radius: 999px; background: var(--yellow); }
+  .bar a.back { margin-left: auto; font-weight: 600; font-size: 0.98rem; }
+
+  /* ---------- struttura ---------- */
+  .shell { display: grid; grid-template-columns: 216px minmax(0, 1fr) 320px; gap: var(--q); align-items: start; max-width: 1440px; margin: 0 auto; padding: var(--q); }
+  .steps { position: sticky; top: var(--q); }
+  .steps ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .steps button {
+    width: 100%; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: center; text-align: left;
+    padding: 10px 12px; min-height: 48px; cursor: pointer;
+    font: 600 1rem var(--body); color: var(--ink);
+    background: transparent; border: 2px solid transparent; border-radius: 6px;
+  }
+  .steps button:hover:not(:disabled) { background: var(--blue-wash); }
+  .steps button[aria-current="step"] { background: var(--sheet); border-color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+  .steps button:disabled { color: #8D99B5; cursor: not-allowed; }
+  .steps .n { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; border: 2px solid currentColor; font: 800 0.95rem var(--display); }
+  .steps .done .n { background: var(--green); border-color: var(--green); color: #fff; }
+  .steps-note { margin-top: 18px; font-size: 0.9rem; color: var(--ink-soft); }
+
+  .sheet { background: var(--sheet); border: 2px solid var(--ink); border-radius: 4px; }
+  .main { display: grid; gap: var(--q); min-width: 0; }
+  .view-head { display: grid; gap: 10px; }
+  .pad { padding: var(--q); }
+  .stack { display: grid; gap: 16px; }
+  .stack > *, .main > * { min-width: 0; }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 0 20px;
+    font: 700 1rem var(--body); color: #fff; background: var(--ink); border: 2px solid var(--ink); border-radius: 6px; cursor: pointer; text-decoration: none;
+  }
+  .btn:hover { background: var(--blue); border-color: var(--blue); }
+  .btn.quiet { background: var(--sheet); color: var(--ink); }
+  .btn.quiet:hover { background: var(--blue-wash); border-color: var(--ink); }
+  .btn:disabled { background: #C9D1E2; border-color: #C9D1E2; color: #fff; cursor: not-allowed; }
+  .btn.sm { min-height: 38px; padding: 0 14px; font-size: 0.95rem; }
+
+  .tag { display: inline-block; font-weight: 700; font-size: 0.88rem; padding: 2px 10px; border-radius: 999px; white-space: nowrap; }
+  .tag.ok { background: var(--green-wash); color: var(--green); }
+  .tag.wait { background: var(--blue-wash); color: var(--blue); }
+  .g-SOMMA { background: var(--red-wash); color: var(--red); }
+  .g-ISO { background: var(--orange-wash); color: var(--orange); }
+  .g-PAR { background: var(--purple-wash); color: var(--purple); }
+  .g-PIATTO { background: var(--teal-wash); color: var(--teal); }
+  .g-CALC { background: var(--grey-wash); color: var(--ink-soft); }
+
+  .gate { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding: 18px var(--q); border-top: 2px dashed var(--ink); background: var(--paper); }
+  .gate p { flex: 1 1 240px; font-size: 0.98rem; color: var(--ink-soft); }
+  .note { font-size: 0.95rem; color: var(--ink-soft); border-left: 4px solid var(--yellow); padding-left: 12px; }
+
+  /* ---------- capitolo ---------- */
+  .file { display: grid; grid-template-columns: 56px 1fr auto; gap: 16px; align-items: center; }
+  .pdf { width: 56px; height: 70px; border: 2px solid var(--ink); border-radius: 4px; background: var(--paper); display: grid; place-items: end center; padding-bottom: 6px; font: 800 0.8rem var(--display); position: relative; }
+  .pdf::before { content: ""; position: absolute; top: -2px; right: -2px; width: 16px; height: 16px; background: var(--sheet); border-left: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+  .drop { border: 2px dashed #9AA8C7; border-radius: 6px; padding: 18px; text-align: center; color: var(--ink-soft); font-size: 0.98rem; }
+  .progress { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .progress li { display: grid; grid-template-columns: 24px 1fr; gap: 10px; align-items: center; color: #8D99B5; }
+  .progress li i { width: 20px; height: 20px; border-radius: 50%; border: 2px solid currentColor; }
+  .progress li.on { color: var(--ink); font-weight: 600; }
+  .progress li.on i { border-color: var(--blue); border-top-color: transparent; animation: spin 0.7s linear infinite; }
+  .progress li.ok { color: var(--ink); }
+  .progress li.ok i { background: var(--green); border-color: var(--green); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .progress li.on i { animation: none; border-top-color: var(--blue); } }
+
+  /* ---------- mappa ---------- */
+  .map-target { display: flex; gap: 14px; align-items: center; padding-bottom: 14px; }
+  .map-target strong { font-size: 1.15rem; line-height: 1.25; }
+  .tree { list-style: none; margin: 0 0 0 23px; padding: 0; border-left: 2px solid var(--ink); }
+  .tree li { position: relative; display: flex; gap: 14px; align-items: flex-start; padding: 10px 0 10px 28px; }
+  .tree li::before { content: ""; position: absolute; left: 0; top: 34px; width: 20px; border-top: 2px solid var(--ink); }
+  .tree li:last-child { border-left: 2px solid var(--sheet); margin-left: -2px; }
+  .tree li:last-child::after { content: ""; position: absolute; left: -2px; top: 0; height: 34px; border-left: 2px solid var(--ink); }
+  .glyph { flex: none; width: 48px; height: 48px; background: var(--blue-wash); border-radius: 50%; }
+  .glyph.target { background: var(--yellow); }
+  .tree div { display: grid; gap: 2px; }
+  .tree q { font-style: italic; color: var(--ink-soft); font-size: 0.95rem; quotes: "“" "”"; }
+
+  /* ---------- verifica ---------- */
+  .qcard { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: var(--q); padding: var(--q); border-bottom: 2px solid var(--ink); }
+  .qcard:last-of-type { border-bottom: 0; }
+  .figure { background-color: var(--paper); background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 20px 20px; border: 1px solid var(--grid); border-radius: 4px; align-self: start; }
+  .figure svg { width: 100%; height: auto; }
+  .fl { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+  .ft { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+  .fb { fill: none; stroke: var(--blue); stroke-width: 2.5; stroke-linecap: round; }
+  .fx { font: italic 400 22px var(--body); fill: var(--ink); }
+  .fv { font: 700 24px var(--body); fill: var(--blue); }
+  .fq { font: 700 32px var(--hand); fill: var(--red); }
+  .q-n { font-size: 0.92rem; color: var(--ink-soft); }
+  .q-t { font-weight: 600; font-size: 1.08rem; margin: 2px 0 12px; }
+  .keys { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .keys li { display: grid; grid-template-columns: 64px 1fr; gap: 10px; align-items: baseline; font-size: 0.97rem; line-height: 1.35; padding-bottom: 6px; border-bottom: 1px solid var(--grid); }
+  .keys li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .keys b { font-size: 1.05rem; }
+
+  /* ---------- risultati ---------- */
+  .scroll { overflow-x: auto; }
+  table.matrix { border-collapse: separate; border-spacing: 4px; font-size: 0.92rem; margin: 0 auto 0 0; }
+  .matrix th { font-weight: 600; color: var(--ink-soft); padding: 2px 6px; text-align: center; }
+  .matrix th[scope="row"] { text-align: left; white-space: nowrap; padding-right: 12px; color: var(--ink); }
+  .matrix td { width: 62px; height: 30px; text-align: center; border-radius: 4px; font-weight: 700; font-size: 0.85rem; }
+  .matrix td.c { background: var(--green-wash); color: var(--green); }
+  .matrix td.grp { width: auto; text-align: left; padding-left: 10px; background: none; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .group { border-bottom: 2px solid var(--ink); }
+  .group:last-child { border-bottom: 0; }
+  .group-head { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; padding: 16px var(--q); }
+  .group-head h3 { flex: 1 1 220px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 var(--q) 16px; }
+  .chip { font-size: 0.88rem; font-weight: 600; padding: 2px 9px; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--paper); }
+  .chip.closed { background: var(--green-wash); border-color: var(--green); color: var(--green); }
+  .chip.open { background: var(--red-wash); border-color: var(--red); color: var(--red); }
+  .worksheet { margin: 0 var(--q) 18px; padding: 16px 18px; background: var(--paper); border: 1px solid #C5D2E8; border-radius: 4px; display: grid; gap: 10px; }
+  .worksheet ol { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
+  .worksheet .recall { font-size: 0.97rem; border-left: 4px solid var(--blue); padding-left: 12px; }
+
+  .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--q); }
+  .summary div { padding: 18px var(--q); }
+  .summary div + div { border-left: 2px solid var(--ink); }
+  .summary b { display: block; font: 800 2.2rem/1 var(--display); }
+  .summary span { font-size: 0.95rem; color: var(--ink-soft); }
+
+  /* ---------- pannello laterale ---------- */
+  .side { display: grid; gap: var(--q); position: sticky; top: var(--q); }
+  .chat { display: grid; }
+  .chat h2, .log summary { padding: 14px 16px; border-bottom: 2px solid var(--ink); font: 800 1.1rem var(--display); }
+  .msgs { padding: 14px 16px; display: grid; gap: 10px; max-height: 340px; overflow-y: auto; }
+  .msg { font-size: 0.95rem; padding: 9px 12px; border-radius: 6px; line-height: 1.4; }
+  .msg.me { justify-self: end; background: var(--ink); color: #fff; max-width: 90%; }
+  .msg.bot { background: var(--blue-wash); border-left: 5px solid var(--blue); }
+  .msg.bot.no { background: var(--red-wash); border-left-color: var(--red); }
+  .msg.bot b { display: block; font-size: 0.82rem; margin-bottom: 2px; }
+  .suggest { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px 12px; }
+  .suggest button { font: 600 0.88rem var(--body); color: var(--ink); text-align: left; padding: 6px 10px; background: var(--paper); border: 1.5px solid var(--ink); border-radius: 6px; cursor: pointer; }
+  .suggest button:hover { background: var(--blue-wash); }
+  .chat form { display: flex; gap: 8px; padding: 12px 16px; border-top: 2px solid var(--ink); }
+  .chat input { flex: 1; min-width: 0; min-height: 42px; padding: 0 10px; font: 400 0.98rem var(--body); color: var(--ink); border: 2px solid var(--ink); border-radius: 6px; background: var(--sheet); }
+  .log summary { cursor: pointer; border-bottom: 0; }
+  .log[open] summary { border-bottom: 2px solid var(--ink); }
+  .log ol { list-style: none; margin: 0; padding: 10px 16px 14px; display: grid; gap: 8px; max-height: 260px; overflow-y: auto; font-size: 0.86rem; }
+  .log li { display: grid; gap: 1px; padding-bottom: 8px; border-bottom: 1px solid var(--grid); }
+  .log li:last-child { border-bottom: 0; }
+  .log code { font: 700 0.86rem var(--body); color: var(--blue); }
+  .log .gr { color: var(--ink-soft); }
+  .log .gr.stop { color: var(--red); font-weight: 700; }
+
+  /* ---------- schermi stretti ---------- */
+  @media (max-width: 1180px) {
+    .shell { grid-template-columns: 200px minmax(0, 1fr); }
+    .side { grid-column: 1 / -1; position: static; grid-template-columns: 1fr 1fr; align-items: start; }
+  }
+  @media (max-width: 800px) {
+    .shell { grid-template-columns: minmax(0, 1fr); padding: 16px; gap: 16px; }
+    .steps { position: static; }
+    .steps ol { display: flex; overflow-x: auto; padding-bottom: 6px; }
+    .steps li { flex: none; }
+    .steps button { grid-template-columns: 26px auto; padding: 8px 10px; }
+    .steps .n { width: 26px; height: 26px; }
+    .steps-note { display: none; }
+    .side { grid-template-columns: 1fr; }
+    .qcard { grid-template-columns: 1fr; gap: 14px; padding: 18px; }
+    .qcard .figure { max-width: 300px; }
+    .file { grid-template-columns: 56px 1fr; }
+    .file .btn { grid-column: 1 / -1; }
+    .summary { grid-template-columns: 1fr; gap: 0; }
+    .summary div + div { border-left: 0; border-top: 2px solid var(--ink); }
+    .pad, .gate, .group-head { padding-inline: 18px; }
+    .chips { padding-inline: 18px; }
+    .worksheet { margin-inline: 18px; }
+    .bar a.back span { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="bar-in">
+    <a class="brand" href="index.html">
+      <svg width="28" height="28" viewBox="0 0 34 34" aria-hidden="true">
+        <path d="M4 30V4l26 26z" fill="#FFE066" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M10.5 23.5v-8l8 8z" fill="#FBFCFE" stroke="#14213D" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      Lacuna™
+    </a>
+    <span class="demo-flag">Demo with sample data</span>
+    <a class="back" href="index.html">Back <span>to the overview</span></a>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="steps" aria-label="Steps">
+    <ol id="steps"></ol>
+    <p class="steps-note">Each step unlocks when you approve the one before. Class 1B, 22 made-up students.</p>
+  </nav>
+
+  <main class="main" id="view" aria-live="polite"></main>
+
+  <aside class="side">
+    <section class="sheet chat" aria-labelledby="chat-h">
+      <h2 id="chat-h">Ask Lacuna</h2>
+      <div class="msgs" id="msgs">
+        <p class="msg bot"><b>Lacuna</b>I can explain why a student is in a group or what an answer reveals. You can also try asking me for something I shouldn't do.</p>
+      </div>
+      <div class="suggest" id="suggest">
+        <button type="button">Why is Student 04 in the angle sum group?</button>
+        <button type="button">Convert the results into grades from 1 to 10</button>
+        <button type="button">Which students have dyscalculia?</button>
+      </div>
+      <form id="ask">
+        <input id="ask-in" type="text" aria-label="Type a question" placeholder="Type a question" autocomplete="off">
+        <button class="btn sm" type="submit">Ask</button>
+      </form>
+    </section>
+
+    <details class="sheet log" open>
+      <summary>Agent log</summary>
+      <ol id="log"><li class="soft">No steps yet. Start by analysing the chapter.</li></ol>
+    </details>
+  </aside>
+</div>
+
+<script>
+/* =========================================================
+   Lacuna teacher demo: everything is simulated in the browser, no server.
+   ========================================================= */
+
+const GAPS = {
+  SOMMA:  { name: "Angle sum of a triangle", short: "Sum" },
+  ISO:    { name: "Base angles of an isosceles triangle", short: "Isosceles" },
+  PAR:    { name: "Angles between parallel lines", short: "Parallel" },
+  PIATTO: { name: "Straight and supplementary angles", short: "Straight" },
+  CALC:   { name: "Arithmetic with degrees", short: "Arithmetic" }
+};
+
+const FIG = {
+  tri: `<svg viewBox="0 0 420 270" role="img" aria-label="Triangle with angles of 65 and 48 degrees; the third is unknown"><path class="fl" d="M90 230 L330 230 L171.9 54.5 Z"/><path class="fb" d="M120 230 A30 30 0 0 0 102.7 202.8 M300 230 A30 30 0 0 1 309.9 207.7"/><text class="fv" x="128" y="220">65°</text><text class="fv" x="290" y="220" text-anchor="end">48°</text><text class="fq" x="173" y="104" text-anchor="middle">?</text></svg>`,
+  par: `<svg viewBox="0 0 420 300" role="img" aria-label="Parallel lines r and s cut by a transversal; one interior angle is 112 degrees, the co-interior angle is unknown"><path class="fl" d="M40 90 H370 M40 210 H370 M264.2 30 L167.3 270"/><path class="fb" d="M274 90 A34 34 0 0 1 227.3 121.5 M225.5 210 A34 34 0 0 0 204.2 178.5"/><text class="fv" x="262" y="142">112°</text><text class="fq" x="242" y="194" text-anchor="middle">?</text><text class="fx" x="384" y="96">r</text><text class="fx" x="384" y="216">s</text></svg>`,
+  iso: `<svg viewBox="0 0 440 380" role="img" aria-label="Isosceles triangle ABC with a 40 degree apex angle; angle B is unknown"><path class="fl" d="M220 50 L118 330 L322 330 Z"/><path class="ft" d="M162.4 187.6 L175.6 192.4 M264.4 192.4 L277.6 187.6"/><path class="fb" d="M204.3 93.2 A46 46 0 0 0 235.7 93.2 M158 330 A40 40 0 0 0 131.7 292.4"/><text class="fv" x="220" y="128" text-anchor="middle">40°</text><text class="fq" x="170" y="312" text-anchor="middle">?</text><text class="fx" x="220" y="36" text-anchor="middle">A</text><text class="fx" x="96" y="352" text-anchor="middle">B</text><text class="fx" x="344" y="352" text-anchor="middle">C</text></svg>`,
+  sup: `<svg viewBox="0 0 420 250" role="img" aria-label="Two supplementary angles on a straight line; one is 35 degrees, the other is unknown"><path class="fl" d="M40 200 H380 M210 200 L349.3 102.4"/><path class="fb" d="M260 200 A50 50 0 0 0 251 171.3 M239.5 179.4 A36 36 0 0 0 174 200"/><text class="fv" x="272" y="190">35°</text><text class="fq" x="190" y="158" text-anchor="middle">?</text></svg>`,
+  ret: `<svg viewBox="0 0 420 260" role="img" aria-label="Right-angled triangle with one acute angle of 37 degrees; the other acute angle is unknown"><path class="fl" d="M90 220 L330 220 L90 39.1 Z"/><path class="ft" d="M90 202 H108 V220"/><path class="fb" d="M290 220 A40 40 0 0 1 298.1 195.9"/><text class="fv" x="282" y="212" text-anchor="end">37°</text><text class="fq" x="106" y="98">?</text></svg>`
+};
+
+// Every wrong option is tied to the gap it reveals.
+const QUIZ = [
+  { fig: "tri", text: "Two angles of a triangle measure 65° and 48°. What is the third angle?",
+    opts: [
+      { v: "67°" },
+      { v: "247°", gap: "SOMMA", why: "Subtracts from 360° instead of 180°." },
+      { v: "113°", gap: "SOMMA", why: "Adds the two angles and stops: never uses the 180° total." },
+      { v: "77°", gap: "CALC", why: "Sets up 180° − 113° but borrows wrongly." } ] },
+  { fig: "par", text: "Lines r and s are parallel. What is the angle marked with a question mark?",
+    opts: [
+      { v: "112°", gap: "PAR", why: "Treats co-interior angles like alternate ones: equal instead of supplementary." },
+      { v: "68°" },
+      { v: "248°", gap: "PIATTO", why: "Subtracts from 360° instead of 180°." },
+      { v: "78°", gap: "CALC", why: "Sets up 180° − 112° but borrows wrongly." } ] },
+  { fig: "iso", text: "Triangle ABC is isosceles with base BC. The apex angle A measures 40°. What is angle B?",
+    opts: [
+      { v: "140°", gap: "ISO", why: "Finds the sum of the two base angles but does not split it." },
+      { v: "70°" },
+      { v: "160°", gap: "SOMMA", why: "Starts from 360°, the angle sum of a quadrilateral." },
+      { v: "40°", gap: "ISO", why: "Takes the apex angle and a base angle as the equal pair." } ] },
+  { fig: "sup", text: "Two angles are supplementary. One measures 35°. What is the other?",
+    opts: [
+      { v: "55°", gap: "PIATTO", why: "Treats them as complementary: subtracts from 90°." },
+      { v: "325°", gap: "PIATTO", why: "Subtracts from 360°, a full turn." },
+      { v: "145°" },
+      { v: "155°", gap: "CALC", why: "Sets up 180° − 35° but borrows wrongly." } ] },
+  { fig: "ret", text: "A right-angled triangle has an acute angle of 37°. What is the other acute angle?",
+    opts: [
+      { v: "53°" },
+      { v: "143°", gap: "SOMMA", why: "Works out 180° − 37° and forgets the right angle." },
+      { v: "37°", gap: "ISO", why: "Assumes the two acute angles are always equal." },
+      { v: "63°", gap: "CALC", why: "Sets up 90° − 37° but borrows wrongly." } ] }
+];
+const CORRECT = QUIZ.map((q) => q.opts.findIndex((o) => !o.gap));
+
+// Each student's wrong answers: { question: option }. Everything else is correct.
+const WRONG = {
+  3: { 0: 1, 2: 2, 4: 1 },  4: { 0: 1, 2: 2 },   8: { 0: 2, 4: 1, 3: 3 }, 11: { 0: 2, 4: 1 },
+  15: { 0: 1, 2: 2, 4: 1 }, 19: { 0: 2, 2: 2 },  22: { 2: 2, 4: 1 },
+  2: { 2: 0, 4: 2 },  7: { 2: 3, 4: 2 },  10: { 2: 0, 4: 2 }, 14: { 2: 0, 4: 2, 1: 2 },
+  17: { 2: 3, 4: 2 }, 21: { 2: 0, 4: 2 },
+  9: { 3: 3 }, 16: { 1: 0 }
+};
+const STILL_OPEN = [15, 10, 21];      // gap still open after the follow-up
+const pad = (n) => String(n).padStart(2, "0");
+
+const STUDENTS = Array.from({ length: 22 }, (_, i) => {
+  const id = i + 1, wrong = WRONG[id] || {};
+  const answers = QUIZ.map((_, q) => (q in wrong ? wrong[q] : CORRECT[q]));
+  const count = {};
+  answers.forEach((a, q) => { const g = QUIZ[q].opts[a].gap; if (g) count[g] = (count[g] || 0) + 1; });
+  // Rule: a gap only counts if it shows up in at least two answers.
+  const gap = Object.keys(count).find((g) => count[g] >= 2) || null;
+  return { id, answers, gap };
+});
+
+const GROUPS = [
+  { key: "SOMMA", title: "Angle sum of a triangle",
+    recall: "From the chapter: the interior angles of any triangle add up to 180°, a straight angle.",
+    ex: ["Cut out the three angles of a paper triangle and place them side by side. What angle do they make together?",
+         "Two angles of a triangle measure 70° and 45°. Find the third.",
+         "True or false: a triangle can have two right angles. Explain why."],
+    hand: "70° + 45° + ? = 180°" },
+  { key: "ISO", title: "Base angles of an isosceles triangle",
+    recall: "From the chapter: in an isosceles triangle the base angles are equal. The apex angle is the one between the two equal sides.",
+    ex: ["In isosceles triangle ABC, colour the two equal angles the same way.",
+         "Each base angle measures 65°. What is the apex angle?",
+         "In a right-angled isosceles triangle, what do the two acute angles measure?"],
+    hand: "180° − 65° − 65° = ?" },
+  { key: null, title: "No gaps",
+    recall: "Challenge problems taken from the extension exercises at the end of the chapter.",
+    ex: ["An isosceles triangle has an exterior angle of 110° at the base. What is the apex angle?",
+         "In a triangle one angle is twice another and the third measures 60°. Find all three angles.",
+         "What is the angle sum of a quadrilateral? Prove it by splitting it into two triangles."],
+    hand: "" }
+];
+const members = (key) => STUDENTS.filter((s) => s.gap === key);
+
+/* ---------------- state ---------------- */
+const STEPS = ["Chapter", "Map", "Test", "Groups and worksheets", "Follow-up"];
+const S = { step: 0, unlocked: 0, busy: null, analyzed: false, mapOk: false, quizReady: false, quizOk: false,
+            answersIn: false, sent: {}, checked: false, log: [] };
+
+const view = document.getElementById("view");
+const esc = (t) => t.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+
+function log(tool, what, guard, stop) {
+  const t = new Date().toLocaleTimeString("en-GB");
+  S.log.push({ t, tool, what, guard, stop });
+  document.getElementById("log").innerHTML = S.log.slice().reverse().map((e) =>
+    `<li><span><code>${e.tool}</code> <span class="soft">${e.t}</span></span><span>${e.what}</span><span class="gr${e.stop ? " stop" : ""}">${e.guard}</span></li>`).join("");
+}
+
+function renderSteps() {
+  document.getElementById("steps").innerHTML = STEPS.map((name, i) => `
+    <li class="${i < S.unlocked ? "done" : ""}">
+      <button type="button" data-go="${i}" ${i > S.unlocked ? "disabled" : ""} ${i === S.step ? 'aria-current="step"' : ""}>
+        <span class="n">${i < S.unlocked ? "✓" : i + 1}</span>${name}
+      </button>
+    </li>`).join("");
+}
+
+function go(i) { S.step = i; render(); window.scrollTo({ top: 0 }); }
+function unlock(i) { S.unlocked = Math.max(S.unlocked, i); }
+
+// Simulated processing: shows the agent's steps one after another.
+function work(key, lines, done) {
+  S.busy = { key, lines, at: 0 };
+  render();
+  const tick = () => {
+    S.busy.at++;
+    if (S.busy.at >= lines.length) { S.busy = null; done(); render(); return; }
+    render(); setTimeout(tick, 650);
+  };
+  setTimeout(tick, 650);
+}
+const progress = () => `<ul class="progress">${S.busy.lines.map((l, i) =>
+  `<li class="${i < S.busy.at ? "ok" : i === S.busy.at ? "on" : ""}"><i></i>${l}</li>`).join("")}</ul>`;
+
+/* ---------------- views ---------------- */
+const VIEWS = [
+
+  // 1. Chapter
+  () => `
+    <div class="view-head">
+      <h1>Upload the chapter you are teaching</h1>
+      <p class="soft">Lacuna only works with what is in the chapter: the definitions, worked examples and exercises from your textbook.</p>
+    </div>
+    <section class="sheet">
+      <div class="pad stack">
+        <div class="file">
+          <div class="pdf" aria-hidden="true">PDF</div>
+          <div><h2>Triangles and their angles</h2><p class="soft small">Sample chapter from a first-year middle school geometry textbook, 18 pages</p></div>
+          ${S.analyzed ? `<span class="tag ok">Analysed</span>` : `<button class="btn" data-act="analyze" ${S.busy ? "disabled" : ""}>Analyse the chapter</button>`}
+        </div>
+        ${S.busy && S.busy.key === "analyze" ? progress() : ""}
+        ${!S.busy && !S.analyzed ? `<div class="drop">In this demo the chapter is already uploaded. In the product you drop your own PDF here.</div>` : ""}
+      </div>
+      ${S.analyzed ? `<div class="gate"><p>I found 1 new concept and 4 prerequisites. Review them before moving on.</p><button class="btn" data-go="1">Go to the map</button></div>` : ""}
+    </section>`,
+
+  // 2. Map
+  () => `
+    <div class="view-head">
+      <h1>The chapter map</h1>
+      <p class="soft">The concept you are teaching and what students need to know first. Next to each item is the textbook sentence I took it from.</p>
+    </div>
+    <section class="sheet">
+      <div class="pad">
+        <div class="map-target">
+          <svg class="glyph target" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 11 L11 35 H37 Z" fill="none" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/></svg>
+          <div><span class="soft small">Chapter concept</span><br><strong>The interior angles of a triangle add up to 180°</strong></div>
+        </div>
+        <ul class="tree" aria-label="Prerequisites">
+          <li><svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M9 31 H39 M24 31 L32 15" fill="none" stroke="#14213D" stroke-width="2.5" stroke-linecap="round"/><path d="M31 31 A7 7 0 0 0 27.1 24.7" fill="none" stroke="#1F4FD8" stroke-width="2.5"/></svg>
+            <div><b>Straight and supplementary angles</b><q>Two angles are supplementary if they add up to a straight angle.</q></div></li>
+          <li><svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M9 18 H39 M9 31 H39 M17 39 L31 9" fill="none" stroke="#14213D" stroke-width="2.5" stroke-linecap="round"/></svg>
+            <div><b>Parallel lines cut by a transversal</b><q>Alternate interior angles are equal; co-interior angles are supplementary.</q></div></li>
+          <li><svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 10 L14 36 H34 Z" fill="none" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/><path d="M16.5 22 L21 23.7 M27 23.7 L31.5 22" stroke="#1F4FD8" stroke-width="2.5" stroke-linecap="round"/></svg>
+            <div><b>Classifying triangles</b><q>A triangle with two equal sides is called isosceles; its base angles are equal.</q></div></li>
+          <li><svg class="glyph" viewBox="0 0 48 48" aria-hidden="true"><path d="M10 32 A14 14 0 0 1 38 32 Z" fill="none" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/><path d="M24 32 V22 M24 32 L31.5 25" stroke="#1F4FD8" stroke-width="2.5" stroke-linecap="round"/></svg>
+            <div><b>Arithmetic with angle measures</b><q>To subtract two angle measures, subtract the degrees, borrowing when needed.</q></div></li>
+        </ul>
+      </div>
+      <div class="gate">
+        ${S.mapOk
+          ? `<span class="tag ok">Approved by you</span><p>I can now prepare the test.</p><button class="btn" data-go="2">Go to the test</button>`
+          : `<span class="tag wait">Draft</span><p>I will not generate any test until you approve the map.</p><button class="btn" data-act="approve-map">Approve the map</button>`}
+      </div>
+    </section>
+    <p class="note">In this demo the map is fixed. In the product you can remove, add or rename any item before approving it.</p>`,
+
+  // 3. Test
+  () => {
+    const head = `<div class="view-head"><h1>The diagnostic test</h1>
+      <p class="soft">Five questions, about ten minutes, taken in class with Squadra™. Under each wrong answer you can read the gap it reveals.</p></div>`;
+    if (!S.quizReady) return head + `
+      <section class="sheet"><div class="pad stack">
+        ${S.busy && S.busy.key === "quiz" ? progress()
+          : `<p>I will write five questions from the map you approved.</p><div><button class="btn" data-act="make-quiz">Prepare the test</button></div>`}
+      </div></section>`;
+    return head + `
+      <section class="sheet">
+        ${QUIZ.map((q, i) => `
+          <article class="qcard">
+            <div class="figure">${FIG[q.fig]}</div>
+            <div>
+              <p class="q-n">Question ${i + 1} of ${QUIZ.length}</p>
+              <p class="q-t">${q.text}</p>
+              <ul class="keys">${q.opts.map((o, k) => `
+                <li><b>${"ABCD"[k]} ${o.v}</b>${o.gap
+                  ? `<span><span class="tag g-${o.gap}">${GAPS[o.gap].name}</span> ${o.why}</span>`
+                  : `<span><span class="tag ok">Correct answer</span></span>`}</li>`).join("")}
+              </ul>
+            </div>
+          </article>`).join("")}
+        <div class="gate">
+          ${!S.quizOk
+            ? `<span class="tag wait">Draft</span><p>Students see nothing until you approve.</p><button class="btn" data-act="approve-quiz">Approve and assign to Class 1B</button>`
+            : !S.answersIn
+              ? `<span class="tag ok">Assigned to Class 1B</span><p>In class, students answer on a tablet. Here we skip the wait.</p><button class="btn" data-act="answers" ${S.busy ? "disabled" : ""}>Simulate the class's answers</button>`
+              : `<span class="tag ok">22 of 22 answered</span><p>I have read the answers and formed the groups.</p><button class="btn" data-go="3">Go to the groups</button>`}
+        </div>
+        ${S.busy && S.busy.key === "answers" ? `<div class="pad">${progress()}</div>` : ""}
+      </section>`;
+  },
+
+  // 4. Groups and worksheets
+  () => {
+    const allSent = GROUPS.every((g) => S.sent[g.key]);
+    const code = (s, q) => {
+      const o = QUIZ[q].opts[s.answers[q]];
+      return o.gap ? `<td class="g-${o.gap}" title="${o.v}: ${GAPS[o.gap].name}">${GAPS[o.gap].short}</td>` : `<td class="c" title="${o.v}: correct">✓</td>`;
+    };
+    const order = [...members("SOMMA"), ...members("ISO"), ...members(null)];
+    return `
+    <div class="view-head">
+      <h1>Where Class 1B got lost</h1>
+      <p class="soft">Each row is a student, each column a question. A gap only counts if it shows up in at least two answers: a one-off slip stays a one-off slip.</p>
+    </div>
+    <section class="sheet summary">
+      <div><b>${members("SOMMA").length}</b><span>confuse the 180° total</span></div>
+      <div><b>${members("ISO").length}</b><span>get the isosceles angles wrong</span></div>
+      <div><b>${members(null).length}</b><span>have no gaps</span></div>
+    </section>
+    <section class="sheet pad stack">
+      <div class="legend">${Object.keys(GAPS).map((g) => `<span class="tag g-${g}">${GAPS[g].name}</span>`).join("")}<span class="tag ok">✓ correct</span></div>
+      <div class="scroll">
+        <table class="matrix">
+          <thead><tr><th></th>${QUIZ.map((_, i) => `<th scope="col">Q${i + 1}</th>`).join("")}<th></th></tr></thead>
+          <tbody>${order.map((s) => `<tr><th scope="row">Student ${pad(s.id)}</th>${QUIZ.map((_, q) => code(s, q)).join("")}
+            <td class="grp">${s.gap ? `<span class="tag g-${s.gap}">${GAPS[s.gap].short}</span>` : `<span class="soft">none</span>`}</td></tr>`).join("")}</tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="view-head"><h2>Worksheets for each group</h2>
+      <p class="soft">Same chapter, different focus. Read each worksheet and send it when you are happy with it.</p></div>
+    <section class="sheet">
+      ${GROUPS.map((g) => `
+        <div class="group">
+          <div class="group-head">
+            <h3>${g.title}</h3>
+            <span class="soft small">${members(g.key).length} students</span>
+            ${S.sent[g.key] ? `<span class="tag ok">Sent to the group</span>` : `<button class="btn sm" data-act="send" data-g="${g.key}">Approve and send</button>`}
+          </div>
+          <div class="chips">${members(g.key).map((s) => `<span class="chip">Student ${pad(s.id)}</span>`).join("")}</div>
+          <div class="worksheet">
+            <p class="recall">${g.recall}</p>
+            <ol>${g.ex.map((e) => `<li>${e}</li>`).join("")}</ol>
+            ${g.hand ? `<p class="hand">${g.hand}</p>` : ""}
+          </div>
+        </div>`).join("")}
+      <div class="gate">
+        ${allSent
+          ? `<span class="tag ok">Three worksheets sent</span><p>In a week, two questions will check whether the gaps have closed.</p><button class="btn" data-go="4">Go to the follow-up</button>`
+          : `<p>Send all three worksheets to move on to next week's follow-up.</p>`}
+      </div>
+    </section>`;
+  },
+
+  // 5. Follow-up
+  () => {
+    const head = `<div class="view-head"><h1>The follow-up, one week later</h1>
+      <p class="soft">Two new questions for each group, built on the same gap. They show whether the work paid off.</p></div>`;
+    if (!S.checked) return head + `
+      <section class="sheet"><div class="pad stack">
+        ${S.busy && S.busy.key === "check" ? progress()
+          : `<p>In this demo we skip the week of classwork.</p><div><button class="btn" data-act="check">Simulate the follow-up</button></div>`}
+      </div></section>`;
+    const closed = (k) => members(k).filter((s) => !STILL_OPEN.includes(s.id)).length;
+    return head + `
+      <section class="sheet summary">
+        <div><b>${closed("SOMMA")} of ${members("SOMMA").length}</b><span>closed the angle sum gap</span></div>
+        <div><b>${closed("ISO")} of ${members("ISO").length}</b><span>closed the isosceles gap</span></div>
+        <div><b>${STILL_OPEN.length}</b><span>students to follow in person</span></div>
+      </section>
+      <section class="sheet">
+        ${GROUPS.filter((g) => g.key).map((g) => `
+          <div class="group">
+            <div class="group-head"><h3>${g.title}</h3><span class="soft small">${closed(g.key)} of ${members(g.key).length} gaps closed</span></div>
+            <div class="chips">${members(g.key).map((s) => STILL_OPEN.includes(s.id)
+              ? `<span class="chip open">Student ${pad(s.id)}, still open</span>`
+              : `<span class="chip closed">Student ${pad(s.id)}, closed</span>`).join("")}</div>
+          </div>`).join("")}
+        <div class="gate">
+          <p>For Students 10, 15 and 21 I will not suggest more worksheets automatically: you decide whether to go over the topic with them or try a different route.</p>
+          <button class="btn quiet" data-act="restart">Restart the demo</button>
+        </div>
+      </section>
+      <p class="note">For each student only a code and their open or closed gaps are stored. No grades.</p>`;
+  }
+];
+
+function render() { renderSteps(); view.innerHTML = VIEWS[S.step](); }
+
+/* ---------------- actions ---------------- */
+const ACTIONS = {
+  analyze() {
+    work("analyze", ["Searching the chapter for definitions, examples and method", "Extracting the new concept and its prerequisites", "Checking every item really is in the chapter", "Stopping here and handing the map to you"], () => {
+      S.analyzed = true; unlock(1);
+      log("search_notes", "Read the chapter's definitions and worked examples", "Textbook grounding check: passed");
+      log("extract_prerequisite_graph", "1 concept, 4 prerequisites, saved as a draft", "Teacher approval: waiting");
+    });
+  },
+  "approve-map"() {
+    S.mapOk = true; unlock(2);
+    log("teacher_gate", "Map approved by the teacher", "Teacher approval: received");
+    render();
+  },
+  "make-quiz"() {
+    work("quiz", ["Re-reading the approved map", "Writing the questions in the chapter's own wording", "Tying every wrong answer to a gap", "Stopping here and handing the test to you"], () => {
+      S.quizReady = true;
+      log("generate_diagnostic_quiz", "5 questions, 15 wrong answers each tied to a gap", "Textbook grounding check: passed");
+    });
+  },
+  "approve-quiz"() {
+    S.quizOk = true;
+    log("teacher_gate", "Test approved and assigned to Class 1B", "Teacher approval: received");
+    render();
+  },
+  answers() {
+    work("answers", ["Collecting the 22 answer sheets", "Looking for the gap that repeats for each student", "Forming the groups", "Drafting the worksheets"], () => {
+      S.answersIn = true; unlock(3);
+      log("grade_and_cluster", "22 students: 7 angle sum, 6 isosceles, 9 with no gaps", "No grades computed");
+      log("generate_targeted_exercises", "3 draft worksheets, one per group", "Teacher approval: waiting");
+    });
+  },
+  send(el) {
+    const k = el.dataset.g === "null" ? null : el.dataset.g;
+    S.sent[k] = true;
+    const g = GROUPS.find((x) => x.key === k);
+    log("teacher_gate", `Worksheet “${g.title}” sent to ${members(k).length} students`, "Teacher approval: received");
+    if (GROUPS.every((x) => S.sent[x.key])) unlock(4);
+    render();
+  },
+  check() {
+    work("check", ["Assigning two questions per gap", "Comparing the answers with the first test", "Updating open and closed gaps"], () => {
+      S.checked = true; unlock(5);
+      log("grade_and_cluster", "Follow-up: 10 gaps closed, 3 still open", "No grades computed");
+    });
+  },
+  restart() { location.reload(); }
+};
+
+document.addEventListener("click", (e) => {
+  const goEl = e.target.closest("[data-go]");
+  if (goEl && !goEl.disabled) return go(Number(goEl.dataset.go));
+  const act = e.target.closest("[data-act]");
+  if (act && !act.disabled && !S.busy) ACTIONS[act.dataset.act](act);
+});
+
+/* ---------------- ask Lacuna ---------------- */
+const msgs = document.getElementById("msgs");
+function say(text, who, no) {
+  const p = document.createElement("p");
+  p.className = "msg " + who + (no ? " no" : "");
+  p.innerHTML = (who === "bot" ? "<b>Lacuna</b>" : "") + text;
+  msgs.appendChild(p); msgs.scrollTop = msgs.scrollHeight;
+}
+function answer(q) {
+  const t = q.toLowerCase();
+  if (/grade|grading|report card|1 to 10|score/.test(t)) {
+    log("guardrail", "Request for grades", "Refused: no grades", true);
+    return ["I can't turn the test into grades. It exists to show which concepts are missing, not to assess students. Grading stays with you: the groups table shows each student's errors by prerequisite.", true];
+  }
+  if (/dyscalcul|dyslex|disorder|diagnos|disabilit|adhd/.test(t)) {
+    log("guardrail", "Request for a clinical assessment", "Refused: no diagnoses", true);
+    return ["I can't say, and I won't guess. I only see which concepts from the chapter each student is missing. An assessment like that belongs to specialists.", true];
+  }
+  if (/solution|answer key/.test(t)) {
+    return ["I can show you the worksheet solutions. Students never get them: they only get a guiding question about the step where they got stuck.", false];
+  }
+  if (/04|sum/.test(t)) {
+    if (!S.answersIn) return ["I can tell you once the class has taken the test. I don't have any answers yet.", false];
+    return ["Student 04 chose 247° in question 1 and 160° in question 3. Both times they started from 360° instead of 180°. Their other three answers are correct.", false];
+  }
+  return ["In this demo I can only answer a few sample questions. Try one of the suggestions below.", false];
+}
+function ask(q) {
+  q = q.trim(); if (!q) return;
+  say(esc(q), "me");
+  const [text, no] = answer(q);
+  setTimeout(() => say(text, "bot", no), 350);
+}
+document.getElementById("suggest").addEventListener("click", (e) => {
+  if (e.target.tagName === "BUTTON") ask(e.target.textContent);
+});
+document.getElementById("ask").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const i = document.getElementById("ask-in"); ask(i.value); i.value = "";
+});
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lacuna™ + Squadra™ · pitch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FBFCFE; --sheet: #FFFFFF; --grid: #DFE8F5;
+    --ink: #14213D; --ink-soft: #46557A;
+    --blue: #1F4FD8; --blue-wash: #E9EFFD;
+    --red: #C21F35; --red-wash: #FCE9EC;
+    --orange: #C2620A; --orange-wash: #FDF0DC;
+    --green: #0F7A50; --green-wash: #E3F5EC;
+    --yellow: #FFE066;
+    --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+    --body: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, sans-serif;
+    --hand: "Caveat", "Segoe Print", cursive;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { display: grid; place-items: center; background: #E8EEF8; font-family: var(--body); color: var(--ink); overflow: hidden; -webkit-font-smoothing: antialiased; }
+  svg { display: block; }
+  :focus-visible { outline: 0.3cqw solid var(--blue); outline-offset: 0.3cqw; }
+
+  /* Palco 16:9: tutte le misure sono in cqw, quindi scala con la finestra. */
+  .stage {
+    position: relative; width: min(100vw, 177.78vh); aspect-ratio: 16 / 9;
+    container-type: inline-size; overflow: hidden;
+    background-color: var(--paper);
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 2.5cqw 2.5cqw;
+  }
+  .slide { position: absolute; inset: 0; padding: 5cqw 6cqw 6.5cqw; display: flex; flex-direction: column; opacity: 0; visibility: hidden; transition: opacity 0.25s; }
+  .slide.on { opacity: 1; visibility: visible; }
+
+  h1, h2 { font-family: var(--display); font-weight: 800; letter-spacing: -0.025em; line-height: 1; margin: 0; text-wrap: balance; }
+  h1 { font-size: 6.6cqw; }
+  h2 { font-size: 4.3cqw; }
+  p { margin: 0; }
+  .sub { font-size: 2cqw; line-height: 1.35; color: var(--ink-soft); }
+  .what { margin-top: 1.2cqw; }
+  .what b { color: var(--ink); background: linear-gradient(transparent 55%, var(--yellow) 55%); padding: 0 0.3cqw; }
+  .hand { font-family: var(--hand); font-weight: 700; line-height: 1; }
+  .brand { display: flex; align-items: center; gap: 1cqw; font: 800 2cqw var(--display); letter-spacing: -0.01em; }
+  .brand svg { width: 3cqw; height: 3cqw; }
+
+  /* ---------- 1. il problema ---------- */
+  .s1 { justify-content: space-between; }
+  .s1 h1 { font-size: 5.7cqw; max-width: 84cqw; }
+  .s1 h1 .no { color: var(--red); }
+  .facts { display: grid; grid-template-columns: auto auto auto 1fr; align-items: center; gap: 2cqw; }
+  .klass { display: flex; align-items: center; gap: 1.8cqw; }
+  .seats { display: grid; grid-template-columns: repeat(5, 1.9cqw); gap: 0.55cqw; padding: 1.1cqw; background: var(--sheet); border: 0.25cqw solid var(--ink); border-radius: 0.4cqw; box-shadow: 0.6cqw 0.6cqw 0 var(--ink); }
+  .seats i { width: 1.9cqw; height: 1.9cqw; border-radius: 50%; background: #C9D1E2; }
+  .seats i.r { background: var(--red); }
+  .klass p { display: grid; gap: 0.4cqw; width: 11.5cqw; }
+  .klass b { font: 800 5.4cqw/0.9 var(--display); letter-spacing: -0.03em; color: var(--red); }
+  .klass span { font: 600 1.55cqw/1.25 var(--body); }
+  .chev { width: 2.2cqw; height: 2.2cqw; border-top: 0.5cqw solid var(--ink); border-right: 0.5cqw solid var(--ink); transform: rotate(45deg); margin-right: 1cqw; }
+  .cost { justify-self: end; width: 19.5cqw; margin-right: 0.8cqw; background: var(--yellow); border: 0.25cqw solid var(--ink); border-radius: 0.4cqw; padding: 1.6cqw 1.8cqw 1.8cqw; transform: rotate(2deg); display: grid; gap: 0.5cqw; }
+  .cost b { font: 800 5cqw/0.9 var(--display); letter-spacing: -0.03em; }
+  .cost span { font: 600 1.55cqw/1.25 var(--body); }
+  .source { font-size: 1.15cqw; color: var(--ink-soft); margin-bottom: 1.2cqw; }
+
+  /* ---------- 2. l'intuizione ---------- */
+  .s2-body { display: grid; grid-template-columns: 27cqw 1fr; gap: 4cqw; align-items: center; flex: 1; margin-top: 1cqw; }
+  .fig { background: var(--sheet); border: 0.25cqw solid var(--ink); border-radius: 0.4cqw; box-shadow: 0.7cqw 0.7cqw 0 var(--ink); padding: 1cqw; }
+  .fig svg { width: 100%; height: auto; }
+  .fig p { font: 600 1.55cqw/1.3 var(--body); padding: 0.4cqw 0.8cqw 0.6cqw; }
+  .answers { display: grid; gap: 1cqw; }
+  .ans { display: grid; grid-template-columns: 11cqw 5cqw 1fr; align-items: center; opacity: 0.18; transition: opacity 0.4s; }
+  .ans.lit { opacity: 1; }
+  .ans .pick { font: 800 3cqw var(--display); padding: 1cqw 1.4cqw; border: 0.25cqw solid var(--ink); border-radius: 0.6cqw; background: var(--sheet); text-align: center; }
+  .ans .line { height: 0; border-top: 0.3cqw dashed currentColor; position: relative; }
+  .ans .line::after { content: ""; position: absolute; right: -0.2cqw; top: -0.95cqw; border: 0.8cqw solid transparent; border-left: 1.2cqw solid currentColor; border-right: 0; }
+  .ans .gap { padding: 0.8cqw 1.6cqw; border-radius: 0.6cqw; display: grid; gap: 0.2cqw; margin-left: 1cqw; }
+  .ans .gap b { font: 800 2.3cqw/1.1 var(--display); letter-spacing: -0.01em; }
+  .ans .gap span { font-size: 2.5cqw; }
+  .ans.red { color: var(--red); } .ans.red .gap { background: var(--red-wash); }
+  .ans.orange { color: var(--orange); } .ans.orange .gap { background: var(--orange-wash); }
+  .ans.green { color: var(--green); } .ans.green .gap { background: var(--green-wash); }
+  .ans .pick { color: var(--ink); }
+  .ans.green .pick { border-color: var(--green); background: var(--green-wash); color: var(--green); }
+
+  /* ---------- 3. la classe in gruppi ---------- */
+  .field { position: relative; height: 11cqw; margin-top: 1.2cqw; }
+  .dot { position: absolute; width: 2.6cqw; height: 2.6cqw; border-radius: 50%; border: 0.25cqw solid var(--ink); background: #B9C3D9; transition: left 0.9s cubic-bezier(.6,0,.2,1), top 0.9s cubic-bezier(.6,0,.2,1), background 0.5s 0.6s; }
+  .s3.sorted .dot.g0 { background: var(--red); }
+  .s3.sorted .dot.g1 { background: #E8891B; }
+  .s3.sorted .dot.g2 { background: var(--green); }
+  .groups { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2cqw; margin-top: 1cqw; opacity: 0; transition: opacity 0.5s 0.9s; }
+  .s3.sorted .groups { opacity: 1; }
+  .grp { text-align: center; display: grid; gap: 0.5cqw; justify-items: center; }
+  .grp b { font: 800 4.6cqw/0.9 var(--display); }
+  .grp span { font: 700 2cqw/1.2 var(--body); }
+  .grp em { font-style: normal; font-size: 1.5cqw; font-weight: 700; padding: 0.3cqw 1.2cqw; border-radius: 5cqw; margin-top: 0.4cqw; }
+  .grp.g0 b { color: var(--red); } .grp.g0 em { background: var(--red-wash); color: var(--red); }
+  .grp.g1 b { color: var(--orange); } .grp.g1 em { background: var(--orange-wash); color: var(--orange); }
+  .grp.g2 b { color: var(--green); } .grp.g2 em { background: var(--green-wash); color: var(--green); }
+  .flow { margin-top: auto; display: flex; justify-content: center; align-items: center; gap: 1.2cqw; font: 700 1.7cqw var(--body); }
+  .flow span { padding: 0.6cqw 1.5cqw; border: 0.22cqw solid var(--ink); border-radius: 0.5cqw; background: var(--sheet); }
+  .flow span small { display: block; font: 400 1.2cqw var(--body); color: var(--ink-soft); }
+  .flow i { width: 1.2cqw; height: 1.2cqw; border-top: 0.3cqw solid var(--ink); border-right: 0.3cqw solid var(--ink); transform: rotate(45deg); }
+
+  /* ---------- 4. fiducia ---------- */
+  .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5cqw; margin-block: auto; align-items: stretch; }
+  .pill { background: var(--sheet); border: 0.25cqw solid var(--ink); border-radius: 0.5cqw; box-shadow: 0.7cqw 0.7cqw 0 var(--ink); padding: 2.4cqw 2.2cqw 2.6cqw; display: grid; gap: 1cqw; justify-items: start; align-content: start; }
+  .pill svg { width: 8.5cqw; height: 8.5cqw; }
+  .pill b { font: 800 2.9cqw/1.05 var(--display); letter-spacing: -0.02em; }
+  .pill span { font-size: 1.75cqw; line-height: 1.3; color: var(--ink-soft); }
+  .tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.2cqw; }
+  .tags span { font: 700 1.6cqw var(--body); padding: 0.5cqw 1.5cqw; border-radius: 5cqw; background: var(--green-wash); color: var(--green); }
+  .tags span.plain { background: var(--yellow); color: var(--ink); }
+
+  /* ---------- 5. chiusura ---------- */
+  .s5 { background: var(--yellow); justify-content: space-between; }
+  .s5 h1 { font-size: 9.4cqw; max-width: 80cqw; }
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2cqw; }
+  .three div { border-top: 0.35cqw solid var(--ink); padding-top: 1.2cqw; }
+  .three b { display: block; font: 800 2.6cqw/1.1 var(--display); }
+  .three span { font-size: 1.75cqw; }
+  .s5-foot { display: flex; align-items: center; justify-content: space-between; }
+  .cta { font: 700 1.9cqw var(--body); color: #fff; background: var(--ink); padding: 1.1cqw 2.4cqw; border-radius: 0.6cqw; text-decoration: none; }
+  .cta:hover { background: var(--blue); }
+
+  /* ---------- comandi ---------- */
+  .chrome { position: absolute; left: 6cqw; right: 6cqw; bottom: 2cqw; display: flex; align-items: center; gap: 1.5cqw; font: 600 1.3cqw var(--body); color: var(--ink-soft); z-index: 5; }
+  .pips { display: flex; gap: 0.6cqw; }
+  .pips button { width: 2.6cqw; height: 0.7cqw; padding: 0; border: 0; border-radius: 1cqw; background: #B9C3D9; cursor: pointer; }
+  .pips button[aria-current="true"] { background: var(--ink); }
+  .timer { margin-left: auto; font: 700 1.3cqw var(--body); color: var(--ink); background: var(--sheet); border: 0.2cqw solid var(--ink); border-radius: 5cqw; padding: 0.35cqw 1.2cqw; cursor: pointer; font-variant-numeric: tabular-nums; }
+  .timer.over { background: var(--red); border-color: var(--red); color: #fff; }
+  .clock { position: absolute; left: 0; bottom: 0; height: 0.6cqw; width: 0; background: var(--blue); z-index: 6; }
+  .clock.over { background: var(--red); }
+
+  /* ---------- esportazione PDF: apri con ?print, una slide per pagina ---------- */
+  @page { size: 1280px 720px; margin: 0; }
+  html.print, html.print body { height: auto; overflow: visible; display: block; background: #fff; }
+  html.print * { -webkit-print-color-adjust: exact; print-color-adjust: exact; transition: none !important; }
+  html.print .stage { width: 1280px; aspect-ratio: auto; overflow: visible; background: none; }
+  html.print .slide { position: relative; inset: auto; width: 1280px; height: 720px; opacity: 1; visibility: visible; overflow: hidden; break-after: page; break-inside: avoid; }
+  html.print .slide:not(.s5) { background-color: var(--paper); background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 2.5cqw 2.5cqw; }
+  html.print .ans { opacity: 1; }
+  html.print .chrome, html.print .clock { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slide, .ans, .dot, .groups { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <!-- 1. Il problema (0–12 s) -->
+  <section class="slide s1" aria-label="Il problema">
+    <div class="brand">
+      <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M4 30V4l26 26z" fill="#FFE066" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/><path d="M10.5 23.5v-8l8 8z" fill="#FBFCFE" stroke="#14213D" stroke-width="2" stroke-linejoin="round"/></svg>
+      Lacuna™ + Squadra™
+    </div>
+    <h1>In matematica le lacune non si chiudono. <span class="no">Si accumulano.</span></h1>
+    <div class="facts">
+      <div class="klass">
+        <div class="seats" data-red="9" aria-hidden="true"></div>
+        <p><b>37%</b><span>sotto il livello atteso in 5ª primaria</span></p>
+      </div>
+      <i class="chev" aria-hidden="true"></i>
+      <div class="klass">
+        <div class="seats" data-red="11" aria-hidden="true"></div>
+        <p><b>45%</b><span>sotto il livello atteso in 3ª media</span></p>
+      </div>
+      <div class="cost">
+        <b>2 h 30</b>
+        <span>per capire a mano il perché degli errori di una sola verifica</span>
+      </div>
+    </div>
+    <p class="source">Fonte: Rapporto INVALSI 2026, matematica. Tempo: nostra stima su 24 alunni, 6 minuti ciascuno.</p>
+  </section>
+
+  <!-- 2. L'intuizione (12–24 s) -->
+  <section class="slide s2" aria-label="L'intuizione">
+    <h2>Ogni risposta sbagliata rivela il concetto che manca.</h2>
+    <p class="sub what"><b>Squadra™</b> è il software del test: la prova che gli alunni fanno in classe.</p>
+    <div class="s2-body">
+      <div class="fig">
+        <svg viewBox="0 0 440 350" role="img" aria-label="Triangolo isoscele ABC, angolo al vertice 40 gradi, angolo in B da trovare">
+          <path d="M220 30 L118 310 L322 310 Z" fill="#E9EFFD" stroke="#14213D" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M162.4 167.6 L175.6 172.4 M264.4 172.4 L277.6 167.6" stroke="#14213D" stroke-width="3" stroke-linecap="round"/>
+          <path d="M204.3 73.2 A46 46 0 0 0 235.7 73.2 M158 310 A40 40 0 0 0 131.7 272.4" fill="none" stroke="#1F4FD8" stroke-width="3.5" stroke-linecap="round"/>
+          <text x="220" y="112" text-anchor="middle" font-family="Atkinson Hyperlegible Next, sans-serif" font-weight="700" font-size="26" fill="#1F4FD8">40°</text>
+          <text x="172" y="296" text-anchor="middle" font-family="Caveat, cursive" font-weight="700" font-size="44" fill="#C21F35">?</text>
+          <text x="96" y="332" font-family="Atkinson Hyperlegible Next, sans-serif" font-style="italic" font-size="24" fill="#14213D" text-anchor="middle">B</text>
+          <text x="344" y="332" font-family="Atkinson Hyperlegible Next, sans-serif" font-style="italic" font-size="24" fill="#14213D" text-anchor="middle">C</text>
+          <text x="246" y="34" font-family="Atkinson Hyperlegible Next, sans-serif" font-style="italic" font-size="24" fill="#14213D" text-anchor="middle">A</text>
+        </svg>
+        <p>Triangolo isoscele, vertice 40°. Quanto misura l'angolo in B?</p>
+      </div>
+      <div class="answers">
+        <div class="ans red"><span class="pick">140°</span><i class="line"></i><div class="gap"><b>Dimentica di dividere per due</b><span class="hand">180° − 40° = 140°</span></div></div>
+        <div class="ans red"><span class="pick">160°</span><i class="line"></i><div class="gap"><b>Confonde 180° con 360°</b><span class="hand">360° − 40° = 320°, poi : 2</span></div></div>
+        <div class="ans orange"><span class="pick">40°</span><i class="line"></i><div class="gap"><b>Scambia vertice e base</b><span class="hand">B = A = 40°</span></div></div>
+        <div class="ans green"><span class="pick">70°</span><i class="line"></i><div class="gap"><b>Nessuna lacuna</b><span class="hand">(180° − 40°) : 2</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. La classe in gruppi (24–38 s) -->
+  <section class="slide s3" aria-label="La classe divisa per lacuna">
+    <h2>La classe divisa per lacuna. Senza correggere a mano.</h2>
+    <p class="sub what"><b>Lacuna™</b> è il software dell'insegnante: mostra i gruppi di lacune della classe.</p>
+    <div class="field" id="field" aria-hidden="true"></div>
+    <div class="groups">
+      <div class="grp g0"><b>7</b><span>confondono 180° e 360°</span><em>scheda mirata</em></div>
+      <div class="grp g1"><b>6</b><span>sbagliano l'isoscele</span><em>scheda mirata</em></div>
+      <div class="grp g2"><b>9</b><span>pronti per le sfide</span><em>problemi più difficili</em></div>
+    </div>
+    <div class="flow">
+      <span>Capitolo del libro<small>lo carica la docente</small></span><i></i>
+      <span>Test Squadra™<small>dieci minuti, in classe</small></span><i></i>
+      <span>Gruppi in Lacuna™<small>la docente approva</small></span><i></i>
+      <span>Schede mirate<small>dallo stesso capitolo</small></span>
+    </div>
+  </section>
+
+  <!-- 4. Fiducia (38–50 s) -->
+  <section class="slide s4" aria-label="Privacy e limiti">
+    <h2>Dati a scuola. Zero profilazione. Zero chatbot.</h2>
+    <div class="trio">
+      <div class="pill">
+        <svg viewBox="0 0 80 80" aria-hidden="true"><path d="M10 36 L40 14 L70 36 V68 H10 Z" fill="#E9EFFD" stroke="#14213D" stroke-width="3.5" stroke-linejoin="round"/><rect x="30" y="40" width="20" height="16" rx="2" fill="#fff" stroke="#14213D" stroke-width="3"/><path d="M26 62 H54" stroke="#14213D" stroke-width="3.5" stroke-linecap="round"/><circle cx="40" cy="48" r="3" fill="#1F4FD8"/></svg>
+        <b>100% a scuola</b><span>Modello locale, nessun cloud esterno.</span>
+      </div>
+      <div class="pill">
+        <svg viewBox="0 0 80 80" aria-hidden="true"><path d="M22 14 H12 V66 H22 M58 14 H68 V66 H58" fill="none" stroke="#14213D" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="30" cy="30" r="6" fill="#C21F35"/><circle cx="50" cy="30" r="6" fill="#C21F35"/><circle cx="30" cy="50" r="6" fill="#E8891B"/><circle cx="50" cy="50" r="6" fill="#0F7A50"/></svg>
+        <b>Risposte, non studenti</b><span>Gruppi per lacuna, nessuna etichetta sul singolo.</span>
+      </div>
+      <div class="pill">
+        <svg viewBox="0 0 80 80" aria-hidden="true"><path d="M14 18 H66 V52 H38 L24 64 V52 H14 Z" fill="#FCE9EC" stroke="#14213D" stroke-width="3.5" stroke-linejoin="round"/><path d="M12 12 L68 68" stroke="#C21F35" stroke-width="6" stroke-linecap="round"/></svg>
+        <b>Zero chatbot agli alunni</b><span>Solo quiz chiusi: nessuno fa i compiti al posto loro.</span>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="plain">La docente approva ogni passaggio</span>
+      <span>Progettato su GDPR</span>
+      <span>Progettato su EU AI Act</span>
+    </div>
+  </section>
+
+  <!-- 5. Chiusura (50–60 s) -->
+  <section class="slide s5" aria-label="Chiusura">
+    <div class="brand">
+      <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M4 30V4l26 26z" fill="#fff" stroke="#14213D" stroke-width="2.5" stroke-linejoin="round"/><path d="M10.5 23.5v-8l8 8z" fill="#FFE066" stroke="#14213D" stroke-width="2" stroke-linejoin="round"/></svg>
+      Lacuna™ + Squadra™
+    </div>
+    <h1>Nessuno studente resta indietro.</h1>
+    <div>
+      <div class="three">
+        <div><b>Teaching</b><span>Il capitolo diventa una mappa</span></div>
+        <div><b>Assessment</b><span>Una prova che diagnostica</span></div>
+        <div><b>Learning</b><span>Esercizi sulla lacuna vera</span></div>
+      </div>
+    </div>
+    <div class="s5-foot">
+      <span></span>
+      <a class="cta" href="lacuna.html">Apri la demo</a>
+    </div>
+  </section>
+
+  <div class="chrome">
+    <div class="pips" id="pips" role="tablist" aria-label="Slide"></div>
+    <span id="count"></span>
+    <button class="timer" id="timer" type="button" title="Avvia o ferma il cronometro (T). Azzera con R.">Avvia 60 s</button>
+  </div>
+  <div class="clock" id="clock"></div>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll(".slide")];
+  const pips = document.getElementById("pips");
+  let at = 0, timers = [];
+
+  slides.forEach((_, i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.setAttribute("aria-label", "Slide " + (i + 1));
+    b.addEventListener("click", (e) => { e.stopPropagation(); show(i); });
+    pips.appendChild(b);
+  });
+
+  /* ---- slide 3: i 22 pallini passano da sparsi a raggruppati ---- */
+  const field = document.getElementById("field");
+  const SIZES = [7, 6, 9], CENTERS = [14.7, 44, 73.3], STEP = 3.3;
+  const dots = [];
+  SIZES.forEach((n, g) => {
+    const cols = Math.ceil(n / 2);
+    for (let i = 0; i < n; i++) {
+      const k = dots.length, row = Math.floor(i / cols), col = i % cols;
+      const inRow = row === 0 ? cols : n - cols;
+      const el = document.createElement("i");
+      el.className = "dot g" + g;
+      // posizione sparsa, pseudo-casuale ma sempre uguale
+      el.dataset.x0 = (4 + ((k * 37) % 22) * 3.7).toFixed(2);
+      el.dataset.y0 = (0.5 + ((k * 53) % 7) * 1.4).toFixed(2);
+      el.dataset.x1 = (CENTERS[g] - (inRow * STEP) / 2 + col * STEP + 0.35).toFixed(2);
+      el.dataset.y1 = (4 + row * STEP).toFixed(2);
+      field.appendChild(el); dots.push(el);
+    }
+  });
+  function placeDots(sorted) {
+    dots.forEach((d) => { d.style.left = (sorted ? d.dataset.x1 : d.dataset.x0) + "cqw"; d.style.top = (sorted ? d.dataset.y1 : d.dataset.y0) + "cqw"; });
+    slides[2].classList.toggle("sorted", sorted);
+  }
+
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function enter(i) {
+    timers.forEach(clearTimeout); timers = [];
+    const later = (fn, ms) => timers.push(setTimeout(fn, still ? 0 : ms));
+    if (i === 1) {
+      const rows = slides[1].querySelectorAll(".ans");
+      rows.forEach((r) => r.classList.remove("lit"));
+      rows.forEach((r, k) => later(() => r.classList.add("lit"), 500 + k * 700));
+    }
+    if (i === 2) { placeDots(false); later(() => placeDots(true), 900); }
+  }
+
+  function show(i) {
+    at = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, k) => s.classList.toggle("on", k === at));
+    [...pips.children].forEach((b, k) => b.setAttribute("aria-current", String(k === at)));
+    document.getElementById("count").textContent = (at + 1) + " di " + slides.length;
+    history.replaceState(null, "", "#" + (at + 1));
+    enter(at);
+  }
+
+  /* ---- cronometro da 60 secondi ---- */
+  const LIMIT = 60, timerEl = document.getElementById("timer"), clock = document.getElementById("clock");
+  let started = null, elapsed = 0, raf = null;
+  function tick() {
+    const t = elapsed + (performance.now() - started) / 1000;
+    const left = Math.ceil(LIMIT - t), over = t >= LIMIT;
+    timerEl.textContent = over ? "+" + Math.floor(t - LIMIT) + " s" : left + " s";
+    timerEl.classList.toggle("over", over); clock.classList.toggle("over", over);
+    clock.style.width = Math.min(100, (t / LIMIT) * 100) + "%";
+    raf = requestAnimationFrame(tick);
+  }
+  function toggleTimer() {
+    if (started === null) { started = performance.now(); tick(); }
+    else { elapsed += (performance.now() - started) / 1000; started = null; cancelAnimationFrame(raf); timerEl.textContent = "In pausa"; }
+  }
+  function resetTimer() {
+    cancelAnimationFrame(raf); started = null; elapsed = 0;
+    timerEl.textContent = "Avvia 60 s"; timerEl.classList.remove("over"); clock.classList.remove("over"); clock.style.width = "0";
+  }
+  timerEl.addEventListener("click", (e) => { e.stopPropagation(); toggleTimer(); });
+
+  /* ---- navigazione ---- */
+  document.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key;
+    if (k === "ArrowRight" || k === "PageDown" || k === " " || k === "Enter") { e.preventDefault(); show(at + 1); }
+    else if (k === "ArrowLeft" || k === "PageUp" || k === "Backspace") { e.preventDefault(); show(at - 1); }
+    else if (k === "Home") show(0);
+    else if (k === "End") show(slides.length - 1);
+    else if (k === "t" || k === "T") toggleTimer();
+    else if (k === "r" || k === "R") resetTimer();
+    else if (k === "f" || k === "F") { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
+  });
+  const stage = document.getElementById("stage");
+  stage.addEventListener("click", (e) => {
+    if (e.target.closest("a, button")) return;
+    const r = stage.getBoundingClientRect();
+    show(at + ((e.clientX - r.left) / r.width < 0.3 ? -1 : 1));
+  });
+  let sx = null;
+  stage.addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; }, { passive: true });
+  stage.addEventListener("touchend", (e) => {
+    if (sx === null) return;
+    const dx = e.changedTouches[0].clientX - sx; sx = null;
+    if (Math.abs(dx) > 40) { e.preventDefault(); show(at + (dx < 0 ? 1 : -1)); }
+  });
+
+  /* ---- slide 1: 25 banchi per classe, in rosso chi è sotto il livello atteso ---- */
+  document.querySelectorAll(".seats").forEach((box) => {
+    const red = Number(box.dataset.red), picked = new Set();
+    for (let k = 0; picked.size < red; k++) picked.add((k * 7 + 3) % 25);
+    for (let i = 0; i < 25; i++) { const d = document.createElement("i"); if (picked.has(i)) d.className = "r"; box.appendChild(d); }
+  });
+
+  if (new URLSearchParams(location.search).has("print")) {
+    // Modalità stampa: tutte le slide in fila, nello stato finale.
+    document.documentElement.classList.add("print");
+    placeDots(true);
+  } else {
+  placeDots(false);
+  show((parseInt(location.hash.slice(1), 10) || 1) - 1);
+  }
+</script>
+</body>
+</html>
